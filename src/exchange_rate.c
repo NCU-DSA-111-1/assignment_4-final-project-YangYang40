@@ -11,20 +11,121 @@ typedef struct currency{
     float rate;
 }Currency_t;
 
+void choose_currency(Currency_t**currency);
+void read_csv(Currency_t**currency);
+void select_mode(Currency_t**currency,int choice_num);
+
+void select_mode(Currency_t**currency,int choice_num){
+    char mode;
+    char direction;
+    float amount;
+    
+    printf("This is the currency you chose\n");
+    printf("%-10s%-10.5f\n",currency[choice_num] -> name,currency[choice_num] -> rate);
+    printf("\nHere are the modes you can choose\n");
+    printf("To convert currency here,trpe 0\n");
+    printf("To use this currency to apply on your cash flow,type 1\n");
+    printf("To choose another currency,type 2\n");
+    printf("\nWhich mode do you want to choose?\n");
+    scanf("%c",&mode);
+    getchar();
+     //error detection
+    while(mode != '0' && mode != '1' && mode != '2'){
+        printf("Command wrong! please enter 0 , 1 or 2\n");
+        scanf("%c",&mode);
+        getchar();
+    }
+
+    switch (mode){
+        case '0':
+            while(direction != 'E'){
+                system("clear");
+                printf("\nMode  0\n");
+                printf("This is the currency you chose\n");
+                printf("%-10s%-10.5f\n",currency[choice_num] -> name,currency[choice_num] -> rate);
+                printf("\nchage from NTD(type F)\nchange to NTD(type T)\nTo exit(type E)\n(F/T/E):");
+                scanf("%c", &direction);
+                getchar();
+                //error detection
+                while(direction != 'T' && direction != 'F' && direction != 'E'){
+                    printf("Command wrong! please enter T , F or E\n");
+                    scanf("%c",&direction);
+                    getchar();
+                }
+                if(direction == 'T'){
+                    printf("\nCovert %s to NTD\n",currency[choice_num] -> name);
+                    printf("\nEnter the amount of %s:",currency[choice_num] -> name);
+                    scanf("%f",&amount);
+                    getchar();
+                    printf("\n%.2f  %s  =  %.2f  NTD\n\n",amount,currency[choice_num] -> name,(amount * currency[choice_num] -> rate));
+
+                    printf("To continue, type C\nTo exit, type E\n(C/E):");
+                    scanf("%c",&direction);
+                    getchar();
+                    //error detection
+                    while(direction != 'C' && direction != 'E' ){
+                        printf("Command wrong! please enter C or E\n");
+                        scanf("%c",&direction);
+                        getchar();
+                    }
+                    
+
+                }
+                else if(direction == 'F'){
+                    printf("\nCovert NTD to %s\n",currency[choice_num] -> name);
+                    printf("Enter the amount of NTD:");
+                    scanf("%f",&amount);
+                    getchar();
+                    printf("\n%.2f  NTD  =  %.2f  %s\n\n",amount,(amount / currency[choice_num] -> rate),currency[choice_num] -> name);
+
+                    printf("To continue, type C\nTo exit, type E\n(C/E):");
+                    scanf("%c",&direction);
+                    getchar();
+                    //error detection
+                    while(direction != 'C' && direction != 'E' ){
+                        printf("Command wrong! please enter C or E\n");
+                        scanf("%c",&direction);
+                        getchar();
+                    }
+                }
+                else if(direction == 'E'){
+                    break;
+                }
+
+            }
+            printf("\n\n --------Exit--------\n\n");
+            break;
+
+        case '1':
+            //connect to main page
+            break;
+        
+        case '2':
+            system("clear");
+            read_csv(currency);
+            choose_currency(currency);
+            break;
+    }
+
+}
+
 void choose_currency(Currency_t**currency){
     char user_curr[57];
-
+    
     printf("\nPlease choose the currents you want to convert(Use \'/\' to devide if you want to ):");
     scanf("%s",user_curr);
     
     int counter = 0;
+    int choose = 0;
     char confirm;
     char c;
     while(counter !=1 || confirm != '1'){
         counter = 0;
+        printf("\nThe current(s) you chose:\n");
         for(int count = 0;count<CURRENCY_NUM;count++){
             if(strstr(user_curr,currency[count] -> name)!= NULL){
                 printf("%-10s%-10.5f\n",currency[count] -> name,currency[count] -> rate);
+                choose = count;
                 counter++;
             }
         }    
@@ -46,7 +147,9 @@ void choose_currency(Currency_t**currency){
                 if(counter != 1){
                     printf("You've totaled entered %d currencies\n", counter);
                     printf("Please choose the \"one\" currency you want to use:");
-                    scanf("%s",user_curr);    
+                    scanf("%s",user_curr);
+                    system("clear");
+                    read_csv(currency);    
                     continue;
                 }
                 else{
@@ -61,8 +164,11 @@ void choose_currency(Currency_t**currency){
                     }
                     if(confirm=='1'){
                         system("clear");//connect to main page
+                        select_mode(currency, choose);
                     }
                     else{
+                        system("clear");
+                        read_csv(currency);
                         printf("\nPlease choose the currents you want to convert(Use \'/\' to devide if you want to ):");
                         scanf("%s",user_curr);        
                         continue;
@@ -70,6 +176,8 @@ void choose_currency(Currency_t**currency){
                 }
             }
             else{
+                system("clear");
+                read_csv(currency);
                 printf("\nPlease choose the currents you want to convert(Use \'/\' to devide if you want to ):");
                 scanf("%s",user_curr);    
                 continue;
@@ -133,6 +241,7 @@ void read_csv(Currency_t**currency){
 }
 
 
+
 int main(){
     //local tine init
     time_t timep;
@@ -171,10 +280,36 @@ int main(){
     }
 
     //Exchange_Rate CSV file read
-    
     printf("\nHere's the exchange rate for all the currency at %d-%d-%d %d:%d:%d\n",(1900+p->tm_year),(1+p->tm_mon),p->tm_mday,p->tm_hour, p->tm_min, p->tm_sec);
     read_csv(currency);
-    choose_currency(currency);
+
+    //Currency choose by user
+    while(1){
+        char det;
+        choose_currency(currency);
+        printf("\nType 1 - To keep using Daily Foreign Exchage Mode \nType 0 - To exit Daily Foreign Exchage Mode\n(0/1):");
+        scanf("%c", &det);
+        getchar();
+         //error detection
+        while(det != '0' && det != '1' ){
+            printf("Command wrong! please enter 0 or 1\n");
+            scanf("%c",&det);
+            getchar();
+        }
+        if(det =='0'){
+            printf("\n\n-------Exiting Daily Foreign Exchage Mode-------");
+            break;
+        }
+        else{
+            continue;
+        }
+
+    }
+    
+        
+    
+    
+    
     
 
 }
