@@ -188,6 +188,8 @@ int main(){
     //read & delete only mode
     int result;
     int loop = 1;
+    int count = 1;
+    int deletenum = 0;
     Data_t *tmpdata;
     Userlist_t *usertmp;
     user_push(users,name);
@@ -203,8 +205,15 @@ int main(){
             for(int i=0;i<result;i++){
                 usertmp=usertmp->next;
             }
+            //set tmpdata at front
+            tmpdata = usertmp -> userdata -> front;
+            //empty - nodata
+            if(tmpdata == NULL){
+                printf("no data");
+            }
             //print
             while(tmpdata!=NULL){
+                printf("%d.  ",count);
                 if(tmpdata->action > 0){
                     //you are a getter
                     printf("%s shold give you %f dollar\n",tmpdata->people,tmpdata->action);
@@ -214,10 +223,12 @@ int main(){
                     printf("You shold give %s %f dollars\n",tmpdata->people,(float)(-1)*(tmpdata->action));
                 }
                 tmpdata = tmpdata->next;
+                count++;
             }
             //continue?
-            printf("Search for another user? type 1 for yes, 0 to exit\n(1/0):");
+            printf("Search for another user? type 1 for yes, 0 to continue\n(1/0):");
             scanf("%d",&loop);
+            
         }
         else{
             printf("User not found! try again!\n");
@@ -227,6 +238,24 @@ int main(){
             result = check_name(users,name);
         }
         //delete mode
+        //reset tmpdata at front
+        tmpdata = usertmp -> userdata -> front;
+        printf("Do you want to delete any of the history?\n");
+        printf("If yes type the number of the history\nIf no type 0\n:");
+        scanf("%d",&deletenum);
+
+        while(deletenum != 0){
+            //TODO confirm system
+            //shift
+             for(int i=0;i<deletenum-1;i++){
+                tmpdata = tmpdata -> next;
+            }
+            //delete
+            delete_data(usertmp -> userdata,tmpdata);
+            printf("To delete another history, type the number of the history\n To stop type 0\n:");
+            scanf("%d",&deletenum);
+        }
+
     
     }
 
