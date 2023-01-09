@@ -17,7 +17,7 @@ void filedownload(){
     //snprintf(filename,30,"%d/%d/%d ForeignExchangeRate",(1900+p->tm_year),(1+p->tm_mon),p->tm_mday);
     //printf("%s",filename);
     
-    system("wget 'https://rate.bot.com.tw/xrt/flcsv/0/day' -O  'ForeignExchangeRate' -nv");
+    system("wget https://rate.bot.com.tw/xrt/flcsv/0/day -O  'ForeignExchangeRate' -nv");
 
 
 }
