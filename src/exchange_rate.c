@@ -188,9 +188,9 @@ void choose_currency(Currency_t**currency){
 
 
 void read_csv(Currency_t**currency){
-    FILE *cfptr = fopen("ForeignExchangeRate","r");
+    FILE* cfptr = fopen("ForeignExchangeRate","r");
     if(cfptr == NULL){
-        printf("File cannot be opem\n");
+        printf("File Cannot Be Open");
     }
     
     char *row ;

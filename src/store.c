@@ -134,65 +134,16 @@ void delete_data(Dataqueue_t* datas ,Data_t* target){
     free(nextptr);
 }
 
-int main(){
-    // store the datas to the linklist
-    Elements_t** info;
-    Userqueue_t* users = init_userqueue();
-    char name[NAMELENGTH];
-    int shift;
-    int *num;
-    //*info = minimize(num);
-    
-    for(int count = 0;count < (*num);count++){
-        if(users -> front == NULL){
-            //giver -- user who shold pay money to getter (action (-money))
-            user_insert(users, info[count]->giver);
-            data_insert(users->front->userdata, info[count]->getter, ((-1)*info[count]->money));
-            //getter -- user who should get money from giver(action (money))
-            user_insert(users, info[count]->getter);
-            data_insert(users->front->userdata, info[count]->giver, info[count]->money);
-        }
-        else{
-            //check if giver's name is on the list
-            Userlist_t* tmp = users->front;
-            shift = check_name(users,info[count]->giver);
-            if(shift !=-1){
-                //shift
-                for(int i=0;i<shift;i++){
-                    tmp=tmp->next;
-                }
-                data_insert(tmp -> userdata,info[count] ->getter, ((-1)*info[count]->money)); 
-            }
-            else{
-                user_insert(users, info[count]->giver);
-                data_insert(users->front->userdata, info[count]->getter, ((-1)*info[count]->money));
-            }
-
-            //check if getter's name is on the list
-            tmp = users->front;
-            shift = check_name(users,info[count]->getter);
-            if(shift !=-1){
-                //shift
-                for(int i=0;i<shift;i++){
-                    tmp=tmp->next;
-                }
-                data_insert(tmp -> userdata,info[count] ->giver, info[count]->money); 
-            }
-            else{
-                user_insert(users, info[count]->getter);
-                data_insert(users->front->userdata, info[count]->getter, info[count]->money);
-            }
-        }
-    }
-    
-    //read & delete only mode
+void search_and_delete(Userqueue_t* users){
     int result;
     int loop = 1;
     int count = 1;
     int deletenum = 0;
+    char name[NAMELENGTH];
     Data_t *tmpdata;
     Userlist_t *usertmp;
-    user_push(users,name);
+    
+    
     
     printf("Please enter your user name:");
     scanf("%s",name);
@@ -237,27 +188,159 @@ int main(){
             getchar();
             result = check_name(users,name);
         }
-        //delete mode
-        //reset tmpdata at front
-        tmpdata = usertmp -> userdata -> front;
-        printf("Do you want to delete any of the history?\n");
-        printf("If yes type the number of the history\nIf no type 0\n:");
-        scanf("%d",&deletenum);
+    }
+    //delete mode
+    //reset tmpdata at front
+    tmpdata = usertmp -> userdata -> front;
+    printf("Do you want to delete any of the history?\n");
+    printf("If yes type the number of the history\nIf no type 0\n:");
+    scanf("%d",&deletenum);
 
-        while(deletenum != 0){
-            //TODO confirm system
-            //shift
-             for(int i=0;i<deletenum-1;i++){
-                tmpdata = tmpdata -> next;
-            }
-            //delete
-            delete_data(usertmp -> userdata,tmpdata);
-            printf("To delete another history, type the number of the history\n To stop type 0\n:");
-            scanf("%d",&deletenum);
+    while(deletenum != 0){
+        //TODO confirm system
+        //shift
+        for(int i=0;i<deletenum-1;i++){
+            tmpdata = tmpdata -> next;
         }
+        //delete
+        delete_data(usertmp -> userdata,tmpdata);
+        printf("To delete another history, type the number of the history\n To stop type 0\n:");
+        scanf("%d",&deletenum);
+        
 
     
     }
+}
+
+int main(){
+    // store the datas to the linklist
+    Elements_t** info;
+    Userqueue_t* users = init_userqueue();
+   
+    int shift;
+    int *num;
+    //**info = minimize(num);
+    //if(info[0] == NULL){
+        //search and delete
+    //}
+    
+    for(int count = 0;count < (*num);count++){
+        if(users -> front == NULL){
+            //giver -- user who shold pay money to getter (action (-money))
+            user_insert(users, info[count]->giver);
+            data_insert(users->front->userdata, info[count]->getter, ((-1)*info[count]->money));
+            //getter -- user who should get money from giver(action (money))
+            user_insert(users, info[count]->getter);
+            data_insert(users->front->userdata, info[count]->giver, info[count]->money);
+        }
+        else{
+            //check if giver's name is on the list
+            Userlist_t* tmp = users->front;
+            shift = check_name(users,info[count]->giver);
+            if(shift !=-1){
+                //shift
+                for(int i=0;i<shift;i++){
+                    tmp=tmp->next;
+                }
+                data_insert(tmp -> userdata,info[count] ->getter, ((-1)*info[count]->money)); 
+            }
+            else{
+                user_insert(users, info[count]->giver);
+                data_insert(users->front->userdata, info[count]->getter, ((-1)*info[count]->money));
+            }
+
+            //check if getter's name is on the list
+            tmp = users->front;
+            shift = check_name(users,info[count]->getter);
+            if(shift !=-1){
+                //shift
+                for(int i=0;i<shift;i++){
+                    tmp=tmp->next;
+                }
+                data_insert(tmp -> userdata,info[count] ->giver, info[count]->money); 
+            }
+            else{
+                user_insert(users, info[count]->getter);
+                data_insert(users->front->userdata, info[count]->getter, info[count]->money);
+            }
+        }
+    }
+    
+    search_and_delete(users);
+
+    // //search & delete only mode
+    // int result;
+    // int loop = 1;
+    // int count = 1;
+    // int deletenum = 0;
+    // Data_t *tmpdata;
+    // Userlist_t *usertmp;
+    
+
+    // printf("Please enter your user name:");
+    // scanf("%s",name);
+    // getchar();
+    // result = check_name(users,name);
+
+    // while(loop!=0){
+    //     if(result != -1){
+    //         //shift
+    //         for(int i=0;i<result;i++){
+    //             usertmp=usertmp->next;
+    //         }
+    //         //set tmpdata at front
+    //         tmpdata = usertmp -> userdata -> front;
+    //         //empty - nodata
+    //         if(tmpdata == NULL){
+    //             printf("no data");
+    //         }
+    //         //print
+    //         while(tmpdata!=NULL){
+    //             printf("%d.  ",count);
+    //             if(tmpdata->action > 0){
+    //                 //you are a getter
+    //                 printf("%s shold give you %f dollar\n",tmpdata->people,tmpdata->action);
+    //             }
+    //             else{
+    //                 //you are a giver
+    //                 printf("You shold give %s %f dollars\n",tmpdata->people,(float)(-1)*(tmpdata->action));
+    //             }
+    //             tmpdata = tmpdata->next;
+    //             count++;
+    //         }
+    //         //continue?
+    //         printf("Search for another user? type 1 for yes, 0 to continue\n(1/0):");
+    //         scanf("%d",&loop);
+            
+    //     }
+    //     else{
+    //         printf("User not found! try again!\n");
+    //         printf("Please enter your user name:");
+    //         scanf("%s",name);
+    //         getchar();
+    //         result = check_name(users,name);
+    //     }
+    //     //delete mode
+    //     //reset tmpdata at front
+    //     tmpdata = usertmp -> userdata -> front;
+    //     printf("Do you want to delete any of the history?\n");
+    //     printf("If yes type the number of the history\nIf no type 0\n:");
+    //     scanf("%d",&deletenum);
+
+    //     while(deletenum != 0){
+    //         //TODO confirm system
+    //         //shift
+    //          for(int i=0;i<deletenum-1;i++){
+    //             tmpdata = tmpdata -> next;
+    //         }
+    //         //delete
+    //         delete_data(usertmp -> userdata,tmpdata);
+    //         printf("To delete another history, type the number of the history\n To stop type 0\n:");
+    //         scanf("%d",&deletenum);
+    //     }
+
+    
+    // }
 
 
 
