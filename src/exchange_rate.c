@@ -4,16 +4,18 @@
 #include<string.h>
 #include<memory.h>
 #include"file_download.h"
+#include"exchange_rate.h"
 #define CURRENCY_NUM 19
 
-typedef struct currency{
-    char name[3];
-    float rate;
-}Currency_t;
+// typedef struct currency{
+//     char name[3];
+//     float rate;
+// }Currency_t;
 
-void choose_currency(Currency_t**currency);
-void read_csv(Currency_t**currency);
-void select_mode(Currency_t**currency,int choice_num);
+// void choose_currency(Currency_t**currency);
+// void read_csv(Currency_t**currency);
+// void select_mode(Currency_t**currency,int choice_num);
+// void exchange_rate();
 
 void select_mode(Currency_t**currency,int choice_num){
     char mode;
@@ -220,7 +222,7 @@ void read_csv(Currency_t**currency){
                 printf("%-10s",token);
                 currency[category_num] -> rate = atof(token);
                 token = strtok(NULL,",");
-                printf("    %d",category_num);
+                //printf("    %d",category_num);
                 category_num++;
             }
             else{
@@ -242,7 +244,7 @@ void read_csv(Currency_t**currency){
 
 
 
-int main(){
+void exchange_rate(){
     //local tine init
     time_t timep;
     struct tm *p;
